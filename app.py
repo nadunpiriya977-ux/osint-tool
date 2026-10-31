@@ -70,30 +70,49 @@ def generate_report(title, data_dict):
     report += "\n=== End of Report ==="
     return report
 
-# ==========================================
-# 1. PHONE NUMBER OSINT MODULE
-# ==========================================
 if menu == "📱 Phone Number Intelligence":
-    st.title("📱 Phone Number Intelligence")
-    target_number = st.text_input("Enter Phone Number (e.g., +94771234567):")
+    st.title("📱 Global Phone Number Intelligence")
+    
+    # රටවල් ලැයිස්තුවක් ලබාදීම
+    countries = {
+        "Sri Lanka (+94)": "LK",
+        "India (+91)": "IN",
+        "United States (+1)": "US",
+        "United Kingdom (+44)": "GB",
+        "Australia (+61)": "AU",
+        "Canada (+1)": "CA"
+    }
+
+    selected_country_name = st.selectbox("Select Country:", list(countries.keys()))
+    selected_region = countries[selected_country_name]
+
+    target_number = st.text_input("Enter Phone Number (Without country code or with it):")
+
     if st.button("Start Investigation", type="primary"):
         if target_number:
-            col1, col2 = st.columns(2)
-            with col1:
-                try:
+            try:
+                # යූසර් තෝරාගත් රට හෝ + සමඟ දෙන ලද අංකය පදනම් කර ගනිමින් පාර්ස් කිරීම
+                if target_number.startswith("+"):
                     parsed_number = phonenumbers.parse(target_number)
-                    if phonenumbers.is_valid_number(parsed_number):
-                        st.success("Status: Valid Number")
-                        st.write(f"**Location:** {geocoder.description_for_number(parsed_number, 'en')}")
-                        st.write(f"**Network:** {carrier.name_for_number(parsed_number, 'en')}")
-                        st.write(f"**Timezone:** {', '.join(timezone.time_zones_for_number(parsed_number))}")
-                    else:
-                        st.error("Invalid phone number.")
-                except:
-                    st.error("Error: Include country code.")
-            with col2:
-                safe_num = target_number.replace("+", "")
-                st.markdown(f"[👉 WhatsApp](https://wa.me/{safe_num}) | [👉 Telegram](https://t.me/+{safe_num})")
+                else:
+                    parsed_number = phonenumbers.parse(target_number, selected_region)
+
+                if phonenumbers.is_valid_number(parsed_number):
+                    st.success("✅ Valid Phone Number!")
+                    
+                    loc = geocoder.description_for_number(parsed_number, "en")
+                    car = carrier.name_for_number(parsed_number, "en")
+                    tz = timezone.time_zones_for_number(parsed_number)
+                    
+                    st.write(f"🌍 **Country/Location:** {loc}")
+                    st.write(f"📡 **Carrier/Network:** {car}")
+                    st.write(f"⏰ **Time Zone:** {', '.join(tz)}")
+                else:
+                    st.error("❌ Invalid phone number for the selected region.")
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+
 
 # ==========================================
 # 2. IP ADDRESS TRACKING
