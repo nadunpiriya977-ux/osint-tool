@@ -20,9 +20,9 @@ st.set_page_config(page_title="Advanced OSINT Platform", page_icon="🕵️", la
 
 
 # පාස්වර්ඩ් ආරක්ෂාව
-PASSWORD = "nadu_osint_2026" 
+PASSWORD = "Tce##67789" 
 
-password_input = st.text_input("Enter Access Password to use this Tool:", type="Tce##67789")
+password_input = st.text_input("Enter Access Password to use this Tool:", type="password")
 
 if password_input != PASSWORD:
     st.warning("⚠️ මේ ටූල් එක පාවිච්චි කිරීමට කරුණාකර නිවැරදි මුරපදය (Password) ලබා දෙන්න.")
