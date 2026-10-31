@@ -22,7 +22,7 @@ st.set_page_config(page_title="Advanced OSINT Platform", page_icon="🕵️", la
 import streamlit as st
 
 # පාස්වර්ඩ් ආරක්ෂාව
-PASSWORD = "Tce##67789" 
+PASSWORD = "nadun" 
 
 # සෙෂන් ස්ටේට් (Session State) එක භාවිතයෙන් පාස්වර්ඩ් එක නිවැරදි නම් සේව් කර තබා ගැනීම
 if "authenticated" not in st.session_state:
