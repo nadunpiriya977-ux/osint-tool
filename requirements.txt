@@ -2,3 +2,4 @@ streamlit
 requests
 phonenumbers
 googlesearch-python
+python-whois
