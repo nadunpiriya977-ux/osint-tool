@@ -19,15 +19,24 @@ import platform
 st.set_page_config(page_title="Advanced OSINT Platform", page_icon="🕵️", layout="wide")
 
 
+import streamlit as st
+
 # පාස්වර්ඩ් ආරක්ෂාව
 PASSWORD = "Tce##67789" 
 
-password_input = st.text_input("Enter Access Password to use this Tool:", type="password")
+# සෙෂන් ස්ටේට් (Session State) එක භාවිතයෙන් පාස්වර්ඩ් එක නිවැරදි නම් සේව් කර තබා ගැනීම
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
 
-if password_input != PASSWORD:
-    st.warning("⚠️ මේ ටූල් එක පාවිච්චි කිරීමට කරුණාකර නිවැරදි මුරපදය (Password) ලබා දෙන්න.")
-    st.warning("⚠️ Please enter the correct password to use this tool.")
-    st.stop()
+if not st.session_state.authenticated:
+    st.title("🔐 Access Control")
+    password_input = st.text_input("Enter Access Password to use this Tool:", type="password")
+    if password_input == PASSWORD:
+        st.session_state.authenticated = True
+        st.rerun() # පාස්වර්ඩ් එක නිවැරදි නම් වහාම පේජ් එක රීලෝඩ් කර පාස්වර්ඩ් බොක්ස් එක ඉවත් කරයි
+    elif password_input:
+        st.warning("⚠️ Please enter the correct password to use this tool.")
+    st.stop() # පාස්වර්ඩ් එක දෙන තුරු යට ඇති ප්‍රධාන ටූල් එක පෙන්වීම වළක්වයි
 
 
 
