@@ -26,6 +26,7 @@ password_input = st.text_input("Enter Access Password to use this Tool:", type="
 
 if password_input != PASSWORD:
     st.warning("⚠️ මේ ටූල් එක පාවිච්චි කිරීමට කරුණාකර නිවැරදි මුරපදය (Password) ලබා දෙන්න.")
+    st.warning("⚠️ Please enter the correct password to use this tool.")
     st.stop()
 
 
