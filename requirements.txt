@@ -3,3 +3,4 @@ requests
 phonenumbers
 googlesearch-python
 python-whois
+dnspython
