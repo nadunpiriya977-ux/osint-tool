@@ -245,24 +245,32 @@ elif menu == "📸 Image Forensics (EXIF)":
 # 9. SSL CERTIFICATE INTELLIGENCE
 # ==========================================
 elif menu == "🔒 SSL Certificate Intelligence":
-    st.title("🔒 SSL Certificate Intelligence")
-    target_site = st.text_input("Enter Domain (e.g., google.com):")
-    if st.button("Inspect SSL Certificate", type="primary"):
-        if target_site:
-            clean_domain = target_site.replace("https://", "").replace("http://", "").split("/")[0]
-            try:
-                context = ssl.create_default_context()
-                with socket.create_connection((clean_domain, 443), timeout=5) as sock:
-                    with context.wrap_socket(sock, server_hostname=clean_domain) as ssock:
-                        cert = ssock.getpeercert()
-                        st.success("✅ SSL Certificate Retrieved Successfully!")
-                        issuer = dict(x[0] for x in cert.get('issuer', []))
-                        st.write(f"**Issuer Organization:** {issuer.get('organizationName', 'N/A')}")
-                        subject = dict(x[0] for x in cert.get('subject', []))
-                        st.write(f"**Subject Common Name:** {subject.get('commonName', 'N/A')}")
-                        st.write(f"**Expires On:** {cert.get('notAfter')}")
-            except Exception as e:
-                st.error(f"❌ Failed to retrieve SSL certificate: {e}")
+        st.title("🔒 SSL & TLS Certificate Intelligence")
+        
+        target_domain = st.text_input("Enter Domain (e.g., google.com):")
+
+        if st.button("Inspect SSL/TLS Certificate", type="primary"):
+            if target_domain:
+                try:
+                    clean_domain = target_domain.replace("https://", "").replace("http://", "").split("/")[0]
+                    ctx = ssl.create_default_context()
+                    with socket.create_connection((clean_domain, 443), timeout=5) as sock:
+                        with ctx.wrap_socket(sock, server_hostname=clean_domain) as ssock:
+                            cert = ssock.getpeercert()
+                            tls_version = ssock.version()
+                            
+                    st.success("✅ SSL/TLS Certificate Retrieved Successfully!")
+                    
+                    issuer = dict(x[0] for x in cert.get('issuer', []))
+                    subject = dict(x[0] for x in cert.get('subject', []))
+                    
+                    st.write(f"🏢 **Issuer Organization:** {issuer.get('organizationName', 'N/A')}")
+                    st.write(f"🏷️ **Subject Common Name:** {subject.get('commonName', 'N/A')}")
+                    st.write(f"🔒 **TLS Version:** {tls_version}")
+                    st.write(f"📅 **Expires On:** {cert.get('notAfter', 'N/A')}")
+                    
+                except Exception as e:
+                    st.error(f"❌ Error retrieving certificate: {e}")
 
 # ==========================================
 # 10. SUBDOMAIN SCANNER
