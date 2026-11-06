@@ -127,18 +127,43 @@ if menu == "📱 Phone Number Intelligence":
 # 2. IP ADDRESS TRACKING
 # ==========================================
 elif menu == "🌍 IP Address Tracking":
-    st.title("🌍 IP Address Tracking")
-    target_ip = st.text_input("Enter IP Address (e.g., 8.8.8.8):")
-    if st.button("Track IP", type="primary"):
-        if target_ip:
-            try:
-                res = requests.get(f"http://ip-api.com/json/{target_ip}").json()
-                if res['status'] == 'success':
-                    st.success("Active IP Address Found!")
-                    st.write(f"**Country:** {res.get('country')} | **City:** {res.get('city')} | **ISP:** {res.get('isp')}")
-                    st.markdown(f"[📍 **Google Maps**](https://www.google.com/maps/?q={res.get('lat')},{res.get('lon')})")
-            except:
-                st.error("Error fetching IP data.")
+        st.title("🌍 IP Address Tracking")
+        
+        target_ip = st.text_input("Enter IP Address (e.g., 8.8.8.8 or 192.168.1.1):")
+
+        if st.button("Track IP", type="primary"):
+            if target_ip:
+                # Check if it's a Private / Local IP
+                if target_ip.startswith("192.168.") or target_ip.startswith("10.") or target_ip.startswith("127.") or target_ip.startswith("172."):
+                    st.success("🏠 Local / Private Network Detected!")
+                    st.write(f"🌐 **IP Address:** {target_ip}")
+                    st.write(f"🔍 **Network Type:** Local Area Network (LAN) / Home Router Network")
+                    st.write(f"🔒 **Routing Scope:** Non-routable on the global public Internet (Private Range)")
+                    st.write(f"💻 **Device Status:** Internal device connected within the local subnet")
+                    
+                    if target_ip.startswith("192.168."):
+                        st.write("📡 **Class/Range:** Typically used for residential Wi-Fi routers and small office networks.")
+                    elif target_ip.startswith("10."):
+                        st.write("🏢 **Class/Range:** Typically used in larger private corporate networks.")
+                    elif target_ip.startswith("127."):
+                        st.write("🖥️ **Class/Range:** Localhost (Loopback address pointing to the current device itself).")
+                else:
+                    try:
+                        import requests
+                        response = requests.get(f"http://ip-api.com/json/{target_ip}", timeout=5)
+                        data = response.json()
+                        
+                        if data.get("status") == "success":
+                            st.success("✅ Public IP Address Tracked Successfully!")
+                            st.write(f"🌐 **IP:** {data.get('query')}")
+                            st.write(f"🌍 **Country:** {data.get('country')}")
+                            st.write(f"🏙️ **City:** {data.get('city')}")
+                            st.write(f"📡 **ISP:** {data.get('isp')}")
+                            st.write(f"🏢 **Organization:** {data.get('org')}")
+                        else:
+                            st.error("❌ Failed to track IP address. Please check the IP and try again.")
+                    except Exception as e:
+                        st.error(f"❌ Error: {e}")
 
 # ==========================================
 # 3. USERNAME FOOTPRINTING
