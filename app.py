@@ -18,7 +18,7 @@ st.set_page_config(
 # Simple Password Protection
 def check_password():
     def password_entered():
-        if st.session_state["password"] == "admin123":  # ඔයාට අවශ්‍ය පාස්වර්ඩ් එකක් මෙහි දමාගත හැක
+        if st.session_state["password"] == "nadun":  # ඔයාට අවශ්‍ය පාස්වර්ඩ් එකක් මෙහි දමාගත හැක
             st.session_state["password_correct"] = True
             del st.session_state["password"]
         else:
